@@ -1,7 +1,5 @@
 
-# The learing note for cs61b!
-
-<center>  Peng Zhang </center>
+# The learing note for cs61b
 
 This is the first line of the markdown file.
 
