@@ -84,11 +84,18 @@ public class IntList {
     // TODO: fill in method
     // IntList curIntList = B;
     IntList ptr = A;
-    while (ptr != null) {
-      ptr = ptr.rest;
+    if (ptr == null) {
+      A = B;
+    } else {
+      while (ptr != null) {
+        if (ptr.rest == null) {
+          ptr.rest = B;
+          break;
+        }
+        ptr = ptr.rest;
+      }
     }
-    ptr = B;
-    return null;
+    return A;
   }
 
   /**
@@ -99,7 +106,12 @@ public class IntList {
     // TODO: fill in method
     if (A == null && B == null) {
       return null;
+    } else if (A == null) {
+      return new IntList(B.first, B.rest);
+    } else if (B == null) {
+      return new IntList(A.first, A.rest);
     }
+
     IntList A1 = A;
     IntList res = new IntList(A.first, null);
     IntList ptr = res;
