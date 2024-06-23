@@ -1,0 +1,8 @@
+{
+  "java.project.sourcePaths": ["src","IntList", "Flik", "Arithmetic"],
+  "java.project.outputPath": "bin",
+  "java.project.referencedLibraries": [
+    "lib/**/*.jar",
+    "D:/code/library-sp18/javalib/*.jar"
+  ]
+}
