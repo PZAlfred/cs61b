@@ -66,13 +66,14 @@ public class IntListTest {
         assertEquals(IntList.of(1, 2, 3), A);
     }
 
-    @Test
+    @Test (timeout = 2000)
     public void testReverse() {
       IntList A = IntList.of(1, 2, 3);
       IntList exp = IntList.of(3, 2, 1);
+      IntList B = null;
       assertEquals(exp, IntList.reverse(A));
-      // assertArrayEquals(null, IntList.reverse(null);
-      // assertNotEquals(IntList.of(1, 2, 3, 4), A);
+      assertEquals(null, IntList.reverse(B));
+      assertNotEquals(IntList.of(1, 2, 3, 4), A);
     }
 
 

@@ -137,6 +137,9 @@ public class IntList {
    * as an input, returns null.
    */
   public static IntList reverse(IntList A) {
+    if (A == null) {
+      return null;
+    }
     IntList temp = new IntList();
     IntList pt = temp;
     pt.first = removeLast(A);
@@ -162,8 +165,7 @@ public class IntList {
     if (A.rest == null) {
       last = A.first;
       A = null;
-    }
-    else {
+    } else {
       while (ptr.rest.rest != null) {
         ptr = ptr.rest;
       }
@@ -172,7 +174,7 @@ public class IntList {
     }
     return last;
   }
-   
+
   /**
    * DO NOT MODIFY ANYTHING BELOW THIS LINE! Many of the concepts below here
    * will be introduced later in the course or feature some form of advanced
