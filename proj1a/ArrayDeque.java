@@ -9,7 +9,7 @@ public class ArrayDeque<T> {
      */
     private void resize(int capacity) {
         T[] a = (T[]) new Object[capacity];
-        System.arraycopy(items, 0, a, 0, capacity);
+        System.arraycopy(items, 0, a, 0, items.length);
         items = a;
     }
 
@@ -142,12 +142,21 @@ public class ArrayDeque<T> {
     }
 
 
-    public static void main(String[] args) {
-        ArrayDeque<Integer> A = new ArrayDeque<>();
-        A.addFirst(1);
-        A.addLast(2);
-        A.addFirst(99);
-        A.get(7);
-    }
+    // public static void main(String[] args) {
+    //     ArrayDeque<Integer> A = new ArrayDeque<>();
+    //     A.addFirst(1);
+    //     A.addLast(2);
+    //     A.addFirst(99);
+    //     A.addFirst(1);
+    //     A.addLast(2);
+    //     A.addFirst(99);
+    //     A.addFirst(1);
+    //     A.addLast(2);
+    //     A.addFirst(99);
+    //     A.addFirst(1);
+    //     A.addLast(2);
+    //     A.addFirst(99);
+    //     A.get(7);
+    // }
 
 }
