@@ -7,7 +7,7 @@ public class ArrayDeque<T> {
     /**
      * Resize the array.
      */
-    public void resize(int capacity) {
+    private void resize(int capacity) {
         T[] a = (T[]) new Object[capacity];
         System.arraycopy(items, 0, a, 0, capacity);
         items = a;
@@ -131,7 +131,7 @@ public class ArrayDeque<T> {
      * and so forth. If no such item exists, returns null. Must not alter the deque!
      */
     public T get(int index) {
-        if (size == 0) {
+        if (size == 0 || index > size) {
             return null;
         }
         int finalIndex = index + nextFirst - 1;
@@ -139,6 +139,15 @@ public class ArrayDeque<T> {
             finalIndex = finalIndex - items.length;
         }
         return items[finalIndex];
+    }
+
+
+    public static void main(String[] args) {
+        ArrayDeque<Integer> A = new ArrayDeque<>();
+        A.addFirst(1);
+        A.addLast(2);
+        A.addFirst(99);
+        A.get(7);
     }
 
 }
