@@ -129,18 +129,17 @@ public class ArrayDeque<T> {
     /**
      * Gets the item at the given index, where 0 is the front, 1 is the next item,
      * and so forth. If no such item exists, returns null. Must not alter the deque!
-     */
+     * !! 0 is not the first item, 1 is the first item.!!*/
     public T get(int index) {
         if (size == 0 || index > size) {
             return null;
         }
-        int finalIndex = index + nextFirst - 1;
+        int finalIndex = index + nextFirst;
         if (finalIndex > items.length - 1) {
             finalIndex = finalIndex - items.length;
         }
         return items[finalIndex];
     }
-
 
     // public static void main(String[] args) {
     //     ArrayDeque<Integer> A = new ArrayDeque<>();
@@ -152,11 +151,7 @@ public class ArrayDeque<T> {
     //     A.addFirst(99);
     //     A.addFirst(1);
     //     A.addLast(2);
-    //     A.addFirst(99);
-    //     A.addFirst(1);
-    //     A.addLast(2);
-    //     A.addFirst(99);
-    //     A.get(7);
+    //     A.get(8);
     // }
 
 }
