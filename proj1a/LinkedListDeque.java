@@ -147,7 +147,7 @@ public class LinkedListDeque<T> {
     return nextNode(sentinel.next, index);
   }
 
-  public TNode nextNode(TNode n, int i) {
+  public T nextNode(TNode n, int i) {
     if (i == 0) {
       return n.item;
     } else {
