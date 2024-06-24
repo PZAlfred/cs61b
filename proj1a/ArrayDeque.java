@@ -50,6 +50,9 @@ public class ArrayDeque<T> {
             nextLast = size;
             nextFirst = items.length - 1;
         }
+        if (nextLast >= items.length) {
+            nextLast = nextLast - items.length;
+        }
         items[nextLast] = item;
         size += 1;
         nextLast += 1;
@@ -143,13 +146,13 @@ public class ArrayDeque<T> {
 
     // public static void main(String[] args) {
     //     ArrayDeque<Integer> A = new ArrayDeque<>();
-    //     A.addFirst(1);
+    //     A.addLast(1);
     //     A.addLast(2);
-    //     A.addFirst(99);
-    //     A.addFirst(1);
+    //     A.addLast(99);
+    //     A.addLast(1);
     //     A.addLast(2);
-    //     A.addFirst(99);
-    //     A.addFirst(1);
+    //     A.addLast(99);
+    //     A.addLast(1);
     //     A.addLast(2);
     //     A.get(8);
     // }
