@@ -62,7 +62,7 @@ public class ArrayDeque<T> {
      * Adds an item of type T to the end of the deque.
      */
     public void addLast(T item) {
-        if (size == items.length) {
+        if (isEmpty()) {
             resize(items.length * 2);
         }
         items[nextLast] = item;
@@ -78,11 +78,7 @@ public class ArrayDeque<T> {
      * Returns true if deque is empty, false otherwise.
      */
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return size == 0;
     }
 
     /**
@@ -149,8 +145,8 @@ public class ArrayDeque<T> {
             value = items[items.length - 1];
             items[items.length - 1] = null;
         } else {
-            value = items[nextLast-1];
-            items[nextLast-1] = null;
+            value = items[nextLast - 1];
+            items[nextLast - 1] = null;
         }
         if (nextLast == 0) {
             nextLast = items.length - 1;
@@ -176,21 +172,21 @@ public class ArrayDeque<T> {
         return items[finalIndex];
     }
 
-    public static void main(String[] args) {
-        ArrayDeque<Integer> A = new ArrayDeque<>();
-        // int N = 9;
-        // int N0 = 5;
-        // for (int i = 0; i < N0; i++) {
-        //     A.addFirst(i);
-        // }
-        // for (int j = 0; j < N - N0; j++) {
-        //     A.addLast(j+N0);
-        // }
-        A.addFirst(0);
-        A.removeFirst();
-        A.removeLast();
-        A.removeLast();
-        int b = A.get(0);
-    }
+    // public static void main(String[] args) {
+    // ArrayDeque<Integer> A = new ArrayDeque<>();
+    // int N = 9;
+    // int N0 = 5;
+    // for (int i = 0; i < N0; i++) {
+    // A.addFirst(i);
+    // }
+    // for (int j = 0; j < N - N0; j++) {
+    // A.addLast(j+N0);
+    // }
+    // A.addFirst(0);
+    // A.removeFirst();
+    // A.removeLast();
+    // A.removeLast();
+    // int b = A.get(0);
+    // }
 
 }
