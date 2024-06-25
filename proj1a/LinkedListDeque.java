@@ -28,7 +28,7 @@ public class LinkedListDeque<T> {
      * Adds an item of type T to the front of the deque.
      */
     public void addFirst(T item) {
-        if (size == 0) {
+        if (isEmpty()) {
             sentinel.next = new TNode(sentinel, item, sentinel);
             sentinel.prev = sentinel.next;
             size += 1;
@@ -45,7 +45,7 @@ public class LinkedListDeque<T> {
      * Adds an item of type T to the end of the deque.
      */
     public void addLast(T item) {
-        if (size == 0) {
+        if (isEmpty()) {
             sentinel.next = new TNode(sentinel, item, sentinel);
             sentinel.prev = sentinel.next;
             size += 1;
@@ -62,11 +62,7 @@ public class LinkedListDeque<T> {
      * Returns true if deque is empty, false otherwise.
      */
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return size == 0;
     }
 
     /**
@@ -156,4 +152,3 @@ public class LinkedListDeque<T> {
     }
 
 }
-
