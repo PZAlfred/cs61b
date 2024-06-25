@@ -9,7 +9,11 @@ public class ArrayDeque<T> {
      */
     private void resize(int capacity) {
         T[] a = (T[]) new Object[capacity];
-        System.arraycopy(items, 0, a, 0, items.length);
+        int frontLength = nextLast;
+        int backLength = items.length - frontLength;
+        System.arraycopy(items, 0, a, 0, frontLength);
+        System.arraycopy(items, nextFirst + 1, a, nextFirst + 1 + items.length, backLength);
+        nextFirst = nextFirst + items.length;
         items = a;
     }
 
@@ -29,7 +33,6 @@ public class ArrayDeque<T> {
     public void addFirst(T item) {
         if (size == items.length) {
             resize(items.length * 2);
-            nextFirst = items.length - 1;
         }
         items[nextFirst] = item;
         size += 1;
@@ -46,14 +49,14 @@ public class ArrayDeque<T> {
     public void addLast(T item) {
         if (size == items.length) {
             resize(items.length * 2);
-            nextLast = size;
-        }
-        if (nextLast >= items.length) {
-            nextLast = nextLast - items.length;
         }
         items[nextLast] = item;
         size += 1;
-        nextLast += 1;
+        if (nextLast == items.length - 1) {
+            nextLast = 0;
+        } else {
+            nextLast += 1;
+        }
     }
 
     /**
@@ -99,7 +102,7 @@ public class ArrayDeque<T> {
         }
         size -= 1;
         T value = items[nextFirst];
-        items[nextFirst] = null;
+        // items[nextFirst] = null;
         if (nextFirst == items.length - 1) {
             nextFirst = 0;
         } else {
@@ -118,7 +121,7 @@ public class ArrayDeque<T> {
         }
         size -= 1;
         T value = items[nextLast];
-        items[nextLast] = null;
+        // items[nextLast] = null;
         if (nextLast == 0) {
             nextLast = items.length - 1;
         } else {
@@ -140,13 +143,16 @@ public class ArrayDeque<T> {
         return items[finalIndex];
     }
 
-    public static void main(String[] args) {
-        ArrayDeque<Integer> A = new ArrayDeque<>();
-        int N = 16;
-        for (int i=0; i<N; i++) {
-            A.addLast(i);
-        }
-        A.get(0);
-    }
+    // public static void main(String[] args) {
+    //     ArrayDeque<Integer> A = new ArrayDeque<>();
+    //     int N = 9;
+    //     for (int i=0; i<N; i++) {
+    //         A.addFirst(i);
+    //     }
+    //     A.removeFirst();
+    //     A.removeLast();
+    //     A.removeLast();
+    //     int b = A.get(0);
+    // }
 
 }
