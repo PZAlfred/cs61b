@@ -62,7 +62,7 @@ public class ArrayDeque<T> {
      * Adds an item of type T to the end of the deque.
      */
     public void addLast(T item) {
-        if (isEmpty()) {
+        if (size == items.length) {
             resize(items.length * 2);
         }
         items[nextLast] = item;
@@ -173,20 +173,23 @@ public class ArrayDeque<T> {
     }
 
     // public static void main(String[] args) {
-    // ArrayDeque<Integer> A = new ArrayDeque<>();
-    // int N = 9;
-    // int N0 = 5;
-    // for (int i = 0; i < N0; i++) {
-    // A.addFirst(i);
-    // }
-    // for (int j = 0; j < N - N0; j++) {
-    // A.addLast(j+N0);
-    // }
-    // A.addFirst(0);
-    // A.removeFirst();
-    // A.removeLast();
-    // A.removeLast();
-    // int b = A.get(0);
+    //     ArrayDeque<Integer> A = new ArrayDeque<>();
+    //     A.addFirst(0);
+    //     A.addFirst(1);
+    //     A.addFirst(2);
+    //     A.addFirst(3);
+    //     A.get(0);
+    //     A.removeFirst();
+    //     A.addLast(6);
+    //     A.removeFirst();
+    //     A.get(0);
+    //     A.removeLast();
+    //     A.get(1);
+    //     A.removeFirst();
+    //     A.removeFirst();
+    //     A.addLast(13);
+    //     int t = A.removeFirst();
+    //     int b = A.get(0);
     // }
 
 }
