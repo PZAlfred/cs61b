@@ -116,14 +116,20 @@ public class ArrayDeque<T> {
             return null;
         }
         size -= 1;
-        T value = items[nextFirst+1];
-        items[nextFirst+1] = null;
+        T value;
+        if (nextFirst == items.length - 1) {
+            value = items[0];
+            items[0] = null;
+        } else {
+            value = items[nextFirst + 1];
+            items[nextFirst + 1] = null;
+        }
         if (nextFirst == items.length - 1) {
             nextFirst = 0;
         } else {
             nextFirst += 1;
         }
-        if (size <= items.length / 2) {
+        if (size <= items.length / 2 && size > 8) {
             resize(items.length / 2);
         }
         return value;
@@ -138,14 +144,20 @@ public class ArrayDeque<T> {
             return null;
         }
         size -= 1;
-        T value = items[nextLast-1];
-        items[nextLast-1] = null;
+        T value;
+        if (nextLast == 0) {
+            value = items[items.length - 1];
+            items[items.length - 1] = null;
+        } else {
+            value = items[nextLast-1];
+            items[nextLast-1] = null;
+        }
         if (nextLast == 0) {
             nextLast = items.length - 1;
         } else {
             nextLast -= 1;
         }
-        if (size <= items.length / 2) {
+        if (size <= items.length / 2 && size > 8) {
             resize(items.length / 2);
         }
         return value;
@@ -164,20 +176,21 @@ public class ArrayDeque<T> {
         return items[finalIndex];
     }
 
-    // public static void main(String[] args) {
-    //     ArrayDeque<Integer> A = new ArrayDeque<>();
-    //     int N = 9;
-    //     int N0 = 5;
-    //     for (int i = 0; i < N0; i++) {
-    //         A.addFirst(i);
-    //     }
-    //     for (int j = 0; j < N - N0; j++) {
-    //         A.addLast(j+N0);
-    //     }
-    //     A.removeFirst();
-    //     A.removeLast();
-    //     A.removeLast();
-    //     int b = A.get(0);
-    // }
+    public static void main(String[] args) {
+        ArrayDeque<Integer> A = new ArrayDeque<>();
+        // int N = 9;
+        // int N0 = 5;
+        // for (int i = 0; i < N0; i++) {
+        //     A.addFirst(i);
+        // }
+        // for (int j = 0; j < N - N0; j++) {
+        //     A.addLast(j+N0);
+        // }
+        A.addFirst(0);
+        A.removeFirst();
+        A.removeLast();
+        A.removeLast();
+        int b = A.get(0);
+    }
 
 }
