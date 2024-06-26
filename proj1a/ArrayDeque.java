@@ -9,29 +9,26 @@ public class ArrayDeque<T> {
      */
     private void resize(int capacity) {
         T[] a = (T[]) new Object[capacity];
+        int oldIndex;
+        int newIndex;
         for (int i = 0; i < size; i++) {
-            int oldIndex = i + nextFirst + 1;
+            oldIndex = i + nextFirst + 1;
             if (oldIndex >= items.length) {
-                oldIndex = oldIndex - items.length;
+                oldIndex -= items.length;
             }
-            int newIndex;
-            if (size == items.length && nextFirst == items.length - 1) {
-                newIndex = oldIndex;
-            } else if (oldIndex < nextLast) {
-                newIndex = oldIndex;
-            } else if (capacity > items.length) {
-                newIndex = oldIndex + items.length;
-            } else {
-                newIndex = oldIndex - items.length / 2;
-            }
+            newIndex = i;
             a[newIndex] = items[oldIndex];
         }
-        if (capacity > items.length) {
-            nextFirst = nextFirst + items.length;
-        } else {
-            nextFirst = nextFirst - items.length / 2;
-        }
         items = a;
+        if (capacity > size) {
+            // For making larger
+            nextFirst = items.length - 1;
+            nextLast = size;
+        } else {
+            // For making smaller
+            nextFirst = items.length - 1;
+            nextLast = 0;
+        }
     }
 
     /**
@@ -179,24 +176,28 @@ public class ArrayDeque<T> {
     //     A.addLast(0);
     //     A.addLast(1);
     //     A.addLast(2);
-    //     A.removeFirst();
+    //     A.removeLast();
     //     A.removeFirst();
     //     A.removeLast();
-    //     A.addFirst(6);
-    //     A.get(0);
-    //     A.addLast(8);
-    //     A.addFirst(9);
-    //     A.addLast(10);
-    //     A.addLast(11);
-    //     A.get(4);
-    //     A.addLast(13);
+    //     A.addLast(6);
+    //     A.removeLast();
+    //     A.addFirst(8);
     //     A.removeFirst();
+    //     A.addFirst(10);
+    //     A.addLast(11);
+    //     A.get(1);
+    //     A.addLast(13);
+    //     A.addLast(14);
     //     A.addLast(15);
-    //     A.get(5);
-    //     A.addFirst(17);
-    //     A.addFirst(18);
-    //     A.addFirst(19);
-    //     A.get(4);
+    //     A.addFirst(16);
+    //     A.get(2);
+    //     A.addLast(18);
+    //     A.addLast(19);
+    //     A.addLast(20);
+    //     A.addLast(21);
+    //     A.removeFirst();
+    //     A.removeLast();
+    //     A.addLast(22);
     //     int t = A.removeFirst();
     //     int b = A.get(0);
     // }
