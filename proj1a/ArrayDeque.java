@@ -9,7 +9,26 @@ public class ArrayDeque<T> {
      */
     private void resize(int capacity) {
         T[] a = (T[]) new Object[capacity];
-        System.arraycopy(items, 0, a, 0, capacity);
+        for (int i = 0; i < size; i++) {
+            int oldIndex = i + nextFirst + 1;
+            if (oldIndex >= items.length) {
+                oldIndex = oldIndex - items.length;
+            }
+            int newIndex;
+            if (oldIndex < nextLast) {
+                newIndex = oldIndex;
+            } else if (capacity > items.length) {
+                newIndex = oldIndex + items.length;
+            } else {
+                newIndex = oldIndex - items.length / 2;
+            }
+            a[newIndex] = items[oldIndex];
+        }
+        if (capacity > items.length) {
+            nextFirst = nextFirst + items.length;
+        } else {
+            nextFirst = nextFirst - items.length / 2;
+        }
         items = a;
     }
 
@@ -29,8 +48,6 @@ public class ArrayDeque<T> {
     public void addFirst(T item) {
         if (size == items.length) {
             resize(items.length * 2);
-            nextLast = size;
-            nextFirst = items.length - 1;
         }
         items[nextFirst] = item;
         size += 1;
@@ -47,23 +64,21 @@ public class ArrayDeque<T> {
     public void addLast(T item) {
         if (size == items.length) {
             resize(items.length * 2);
-            nextLast = size;
-            nextFirst = items.length - 1;
         }
         items[nextLast] = item;
         size += 1;
-        nextLast += 1;
+        if (nextLast == items.length - 1 && size < items.length) {
+            nextLast = 0;
+        } else {
+            nextLast += 1;
+        }
     }
 
     /**
      * Returns true if deque is empty, false otherwise.
      */
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return size == 0;
     }
 
     /**
@@ -97,12 +112,21 @@ public class ArrayDeque<T> {
             return null;
         }
         size -= 1;
-        T value = items[nextFirst];
-        items[nextFirst] = null;
+        T value;
+        if (nextFirst == items.length - 1) {
+            value = items[0];
+            items[0] = null;
+        } else {
+            value = items[nextFirst + 1];
+            items[nextFirst + 1] = null;
+        }
         if (nextFirst == items.length - 1) {
             nextFirst = 0;
         } else {
             nextFirst += 1;
+        }
+        if (size <= items.length / 2 && items.length > 8) {
+            resize(items.length / 2);
         }
         return value;
     }
@@ -116,12 +140,21 @@ public class ArrayDeque<T> {
             return null;
         }
         size -= 1;
-        T value = items[nextLast];
-        items[nextLast] = null;
+        T value;
+        if (nextLast == 0) {
+            value = items[items.length - 1];
+            items[items.length - 1] = null;
+        } else {
+            value = items[nextLast - 1];
+            items[nextLast - 1] = null;
+        }
         if (nextLast == 0) {
             nextLast = items.length - 1;
         } else {
             nextLast -= 1;
+        }
+        if (size <= items.length / 2 && items.length > 8) {
+            resize(items.length / 2);
         }
         return value;
     }
@@ -131,23 +164,22 @@ public class ArrayDeque<T> {
      * and so forth. If no such item exists, returns null. Must not alter the deque!
      */
     public T get(int index) {
-        if (size == 0 || index > size) {
+        if (size == 0 || index > size - 1) {
             return null;
         }
-        int finalIndex = index + nextFirst - 1;
-        if (finalIndex > items.length - 1) {
-            finalIndex = finalIndex - items.length;
-        }
+        int finalIndex = index + nextFirst + 1;
+        finalIndex = finalIndex % items.length;
         return items[finalIndex];
     }
 
-
-    public static void main(String[] args) {
-        ArrayDeque<Integer> A = new ArrayDeque<>();
-        A.addFirst(1);
-        A.addLast(2);
-        A.addFirst(99);
-        A.get(7);
-    }
+    // public static void main(String[] args) {
+    // ArrayDeque<Integer> A = new ArrayDeque<>();
+    // int N = 9;
+    // for (int i=0; i<N; i++) {
+    //     A.addLast(i);
+    // }
+    // int t = A.removeFirst();
+    // int b = A.get(0);
+    // }
 
 }
