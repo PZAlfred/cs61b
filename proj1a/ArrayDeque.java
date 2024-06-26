@@ -65,12 +65,12 @@ public class ArrayDeque<T> {
             resize(items.length * 2);
         }
         items[nextLast] = item;
-        size += 1;
         if (nextLast == items.length - 1 && size < items.length) {
             nextLast = 0;
         } else {
             nextLast += 1;
         }
+        size += 1;
     }
 
     /**
