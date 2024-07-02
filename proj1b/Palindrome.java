@@ -49,14 +49,14 @@ public class Palindrome {
     /**
      * Help method for overload isPalindrome.
      */
-    public boolean helpPalindromeRecursiveCC(Deque<Character> D, CharacterComparator cc) {
+    private boolean helpPalindromeRecursiveCC(Deque<Character> D, CharacterComparator cc) {
         if (D.size() <= 1) {
             return true;
         } else {
             Character first = D.removeFirst();
             Character last = D.removeLast();
-            first = Character.toLowerCase(first);
-            last = Character.toLowerCase(last);
+            // first = Character.toLowerCase(first);
+            // last = Character.toLowerCase(last);
             if (cc.equalChars(first, last)) {
                 return helpPalindromeRecursiveCC(D, cc);
             } else {
