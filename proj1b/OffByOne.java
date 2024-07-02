@@ -1,4 +1,7 @@
 public class OffByOne implements CharacterComparator {
+
+    static Palindrome palindrome = new Palindrome();
+
     /**
      * Returns true if the two chars are off-by-one.
      */
@@ -15,7 +18,7 @@ public class OffByOne implements CharacterComparator {
      * Returns true if given word is off-by-one Palindrome.
      */
     public boolean isPalindrome(String word) {
-        Deque<Character> D = Palindrome.wordToDeque(word);
+        Deque<Character> D = palindrome.wordToDeque(word);
         return newHelpPalindrome(D);
     }
 

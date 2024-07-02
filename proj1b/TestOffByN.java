@@ -2,6 +2,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class TestOffByN {
+    
+    static Palindrome palindrome = new Palindrome();
     // You must use this CharacterComparator and not instantiate
     // new ones, or the autograder might be upset.
     static CharacterComparator offByN = new OffByN(3);
