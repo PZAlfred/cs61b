@@ -13,7 +13,7 @@ public class Palindrome {
     }
 
     /**
-     * Returns true if given word is a palindrome. 
+     * Returns true if given word is a palindrome.
      */
     public boolean isPalindrome(String word) {
         Deque<Character> D = wordToDeque(word);
@@ -55,6 +55,8 @@ public class Palindrome {
         } else {
             Character first = D.removeFirst();
             Character last = D.removeLast();
+            first = Character.toLowerCase(first);
+            last = Character.toLowerCase(last);
             if (cc.equalChars(first, last)) {
                 return helpPalindromeRecursiveCC(D, cc);
             } else {
@@ -62,8 +64,5 @@ public class Palindrome {
             }
         }
     }
-
-
-
 
 }

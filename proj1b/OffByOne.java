@@ -4,8 +4,8 @@ public class OffByOne implements CharacterComparator {
      */
     @Override
     public boolean equalChars(char x, char y) {
-        int d = x - y;
-        if (d == 1 || d == -1) {
+        int d = Math.abs(x - y);
+        if (d == 1 || d == 33 || d == 31) {
             return true;
         }
         return false;
