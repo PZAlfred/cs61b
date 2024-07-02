@@ -10,10 +10,7 @@ public class TestOffByOne {
     @Test
     public void testEqualChars() {
         assertEquals(true, offByOne.equalChars('a', 'b'));
-    }
-
-    @Test
-    public void testIsPalindrome() {
-        assertEquals(true, offByOne.isPalindrome("ab"));
+        assertEquals(false, offByOne.equalChars('a', 'c'));
+        assertEquals(true, offByOne.equalChars('c', 'b'));
     }
 }

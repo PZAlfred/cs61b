@@ -24,6 +24,11 @@ public class TestPalindrome {
         assertEquals(true, palindrome.isPalindrome("a"));
         assertEquals(true, palindrome.isPalindrome(""));
         assertEquals(false, palindrome.isPalindrome("cat")); 
-        
+
+        CharacterComparator cc = new OffByOne();
+        assertEquals(true, palindrome.isPalindrome("flake", cc));
+
+        CharacterComparator cc1 = new OffByN(3);
+        assertEquals(true, palindrome.isPalindrome("aed", cc1));
     }
 }

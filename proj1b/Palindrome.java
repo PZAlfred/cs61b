@@ -38,10 +38,30 @@ public class Palindrome {
 
     }
 
+    /**
+     * The third public method overload isPalindrome.
+     */
+    public boolean isPalindrome(String word, CharacterComparator cc) {
+        Deque<Character> D = wordToDeque(word);
+        return helpPalindromeRecursiveCC(D, cc);
+    }
 
-
-
-    
+    /**
+     * Help method for overload isPalindrome.
+     */
+    public boolean helpPalindromeRecursiveCC(Deque<Character> D, CharacterComparator cc) {
+        if (D.size() <= 1) {
+            return true;
+        } else {
+            Character first = D.removeFirst();
+            Character last = D.removeLast();
+            if (cc.equalChars(first, last)) {
+                return helpPalindromeRecursiveCC(D, cc);
+            } else {
+                return false;
+            }
+        }
+    }
 
 
 
