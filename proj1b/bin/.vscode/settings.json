@@ -3,6 +3,8 @@
   "java.project.outputPath": "bin",
   "java.project.referencedLibraries": [
     "lib/**/*.jar",
+    "/Users/pzalfred/Documents/cs61b/library-sp18/javalib/*.jar",
     "D:/code/library-sp18/javalib/*.jar"
-  ]
+  ],
+  "java.debug.settings.onBuildFailureProceed": true
 }
