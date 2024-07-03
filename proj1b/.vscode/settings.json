@@ -6,5 +6,5 @@
     "/Users/pzalfred/Documents/cs61b/library-sp18/javalib/*.jar",
     "D:/code/library-sp18/javalib/*.jar",
   ],
-  "java.debug.settings.onBuildFailureProceed": true
+//   "java.debug.settings.onBuildFailureProceed": true
 }
