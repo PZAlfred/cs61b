@@ -4,12 +4,6 @@ public class OffByOne implements CharacterComparator {
      */
     @Override
     public boolean equalChars(char x, char y) {
-        int d = Math.abs(x - y);
-        if (d == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return Math.abs(x - y) == 1;
     }
-
 }
