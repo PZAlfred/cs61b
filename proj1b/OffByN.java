@@ -12,7 +12,7 @@ public class OffByN implements CharacterComparator {
     @Override
     public boolean equalChars(char x, char y) {
         int d = Math.abs(x - y);
-        if (d == N || d == 32 + N || d == 32 - N) {
+        if (d == N) {
             return true;
         }
         return false;
