@@ -13,8 +13,8 @@ public class TestOffByN {
     @Test
     public void testEqualChars() {
         assertEquals(true, offByN.equalChars('a', 'd'));
-        assertEquals(true, offByN.equalChars('A', 'd'));
-        assertEquals(true, offByN.equalChars('a', 'D'));
+        assertEquals(false, offByN.equalChars('A', 'd'));
+        assertEquals(false, offByN.equalChars('a', 'D'));
     }
 
 }
