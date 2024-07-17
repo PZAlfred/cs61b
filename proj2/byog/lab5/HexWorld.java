@@ -28,7 +28,7 @@ public class HexWorld {
         }
         int x_start = 3;
         int y_start = HEIGHT / 2 - 6 + 2;
-        // addHexagon(x_start, y_start, 3, world, Tileset.TREE);
+        // addHexagon(x_start, y_start, 4, world, Tileset.TREE);
         // addHexagon(x_start+5, y_start-3, 3, world, Tileset.WATER);
         // addHexagon(x_start+10, y_start-6, 3, world, Tileset.SAND);
         // ter.renderFrame(world);
