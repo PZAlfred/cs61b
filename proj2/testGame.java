@@ -5,9 +5,9 @@ import byog.TileEngine.TETile;
 public class testGame {
     public static void main(String[] args) {
         TERenderer ter = new TERenderer();
-        ter.initialize(80, 30);
+        ter.initialize(Game.WIDTH, Game.HEIGHT);
         Game game = new Game();
-        TETile[][] tiles = game.playWithInputString("n123S");
+        TETile[][] tiles = game.playWithInputString("n123123S:Q");
         ter.renderFrame(tiles);
     }
 }

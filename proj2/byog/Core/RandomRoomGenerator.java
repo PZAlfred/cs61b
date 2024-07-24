@@ -1,5 +1,7 @@
 package byog.Core;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 import byog.TileEngine.TETile;
@@ -11,15 +13,16 @@ public class RandomRoomGenerator {
     private int roomNum;
 
     public TETile[][] generateRandomRooms(int width, int height, int seed) {
-        minRoomNum = width * height / 120;
-        maxRoomNum = width * height / 60;
+        minRoomNum = width * height / 240;
+        maxRoomNum = width * height / 120;
         Random rd = new Random(seed);
         TETile[][] re = new TETile[width][height];
 
-        roomNum = rd.nextInt(minRoomNum, maxRoomNum);
+        // roomNum = rd.nextInt(minRoomNum, maxRoomNum);
+        roomNum = 16; 
         roomNum = (roomNum / 4) * 4; // round to integer times of 4.
 
-        Room[] rooms = new Room[roomNum];
+        List<Room> rooms = new LinkedList<>();
 
         int n = roomNum / 4;
 
@@ -29,6 +32,9 @@ public class RandomRoomGenerator {
             }
         }
 
+        /*
+         * Generate the room origins.
+         */
         for (int q = 0; q < 4; q++) {
             int xMin = 0, xMax = 0, yMin = 0, yMax = 0;
             switch (q) {
@@ -60,14 +66,50 @@ public class RandomRoomGenerator {
             for (int i = 0; i < n; i++) {
                 int x = rd.nextInt(xMin, xMax);
                 int y = rd.nextInt(yMin, yMax);
-                int ind = q * 4 + i;
-                rooms[ind] = new Room(x, y);
+                rooms.add(new Room(x, y));
                 re[x][y] = Tileset.FLOWER;
                 System.out.println(x + ", " + y);
+            }
+        }
+
+        /*
+         * Let the room grow.
+         */
+        for (int i = 0; i < 5; i++) {
+            for (Room room : rooms) {
+                room.grow(room.roomsWithoutThis(rooms));
+            }
+        }
+
+        /*
+         * Add the room tile into the Tile Matrix.
+         */
+        for (Room room : rooms) {
+            int lengthHorizontal = room.eastWall() - room.westWall() + 1;
+            int lengthVertical = room.northWall() - room.southWall() + 1;
+            for (int i = 0; i < lengthHorizontal; i++) {
+                re[room.westWall() + i][room.southWall()] = Tileset.WALL;
+                re[room.westWall() + i][room.northWall()] = Tileset.WALL;
+            }
+            for (int i = 0; i < lengthVertical; i++) {
+                re[room.westWall()][room.southWall() + i] = Tileset.WALL;
+                re[room.eastWall()][room.southWall() + i] = Tileset.WALL;
             }
         }
 
         return re;
     }
 
+    /*
+     * check all rooms can grow all not.
+     */
+    private boolean allGrow(List<Room> rooms) {
+        boolean status = false;
+        for (Room room : rooms) {
+            if (room.canGrow(room.roomsWithoutThis(rooms))) {
+                status = true;
+            }
+        }
+        return status;
+    }
 }
