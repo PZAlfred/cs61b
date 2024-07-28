@@ -1,5 +1,6 @@
 package byog.Core;
 
+import java.util.Random;
 import java.util.List;
 import java.util.LinkedList;
 
@@ -69,14 +70,44 @@ public class Room {
     /*
      * Generate horizontal hallway.
      */
-    public Hallway getHorizontalHallway(List<Room> rooms) {
-        return new Hallway(x, y, x, y, null, null);
+    public Hallway getHorizontalHallway(List<Room> rooms, Random rd) {
+        Room returnRoom = new Room(0, 0);
+        int returnY = this.southY;
+        for (Room room : rooms) {
+            if (this.equals(room) || this.overlapHorizontalWith(room)) {
+                continue;
+            } else if (this.northWall() >= room.southWall() || this.southWall() <= room.northWall()) {
+                continue;
+            } else {
+                int y1 = 0, y2 = 0;
+                for (int y = this.southY; y <= this.northY; y++) {
+                    if (y1 == 0 && y > room.southWall()) {
+                        if (y == room.northWall() - 1 || y == this.northWall() - 1) {
+                            y2 = y;
+                        }
+                        y1 = y;
+                    } else if (y1 != 0 && y == room.northWall() - 1) {
+                        y2 = y;
+                    }
+                }
+                returnY = rd.nextInt(y1, y2);
+                returnRoom = room;
+                if (rd.nextDouble() > 0.5) {
+                    break;
+                }
+            }
+        }
+        if (this.eastWall() < returnRoom.westWall()) {
+            return new Hallway(this.eastWall(), returnY, returnRoom.westWall(), returnY, this, returnRoom);
+        } else {
+            return new Hallway(this.westWall(), returnY, returnRoom.eastWall(), returnY, this, returnRoom);
+        }
     }
 
     /*
      * Generate vertical hallway.
      */
-    public Hallway getVerticalHallway(List<Room> rooms) {
+    public Hallway getVerticalHallway(List<Room> rooms, Random rd) {
         return new Hallway(x, y, x, y, null, null);
     }
 

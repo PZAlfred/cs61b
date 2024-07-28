@@ -60,12 +60,12 @@ public class RandomRoomGenerator {
         int hallwayLimit = rd.nextInt(n * 2, n * 4);
         for (int i = 0; i < hallwayLimit; i++) {
             Room room = rooms.get(rd.nextInt(0, rooms.size()));
-            hallways.add(room.getHorizontalHallway(rooms));
+            hallways.add(room.getHorizontalHallway(rooms, rd));
         }
 
         for (int i = 0; i < hallwayLimit; i++) {
             Room room = rooms.get(rd.nextInt(0, rooms.size()));
-            hallways.add(room.getVerticalHallway(rooms));
+            hallways.add(room.getVerticalHallway(rooms, rd));
         }
 
         /*
