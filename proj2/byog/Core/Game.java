@@ -53,13 +53,27 @@ public class Game {
         }
 
         /*
+         * check if nunStr is valid.
+         */
+        String maxValue = "9223372036854775807";
+        if (numStr.length() > 19) {
+            System.exit(0);
+        } else if (numStr.length() == 19) {
+            for (int i = 0; i < numStr.length(); i++) {
+                if ((int) numStr.charAt(i) > (int) maxValue.charAt(i)) {
+                    System.exit(0);
+                }
+            }
+        }
+
+        /*
          * A valid input and process the matrix.
          */
-        int SEED = 0;
+        long SEED = 0;
         if (pureNum) {
-            SEED = Integer.valueOf(numStr);
+            SEED =Long.parseLong(numStr);
         } else {
-            System.exit(SEED);
+            System.exit(0);
         }
 
         /*

@@ -5,8 +5,8 @@ import java.util.LinkedList;
 
 public class Room {
 
-    private int x;
-    private int y;
+    public int x;
+    public int y;
     private int westX;
     private int eastX;
     private int northY;
@@ -66,22 +66,48 @@ public class Room {
         }
     }
 
+    /*
+     * Generate horizontal hallway.
+     */
+    public Hallway getHorizontalHallway(List<Room> rooms) {
+        return new Hallway(x, y, x, y, null, null);
+    }
+
+    /*
+     * Generate vertical hallway.
+     */
+    public Hallway getVerticalHallway(List<Room> rooms) {
+        return new Hallway(x, y, x, y, null, null);
+    }
+
     /**
      * Method to grow the room one time, if there is a boundary, don't grow.
      * Grow --> update the value of 4 boundaries.
      */
-    public void grow(List<Room> rooms) {
-        if (this.northStatus(rooms)) {
-            northY += 1;
-        }
-        if (this.southStatus(rooms)) {
-            southY -= 1;
-        }
-        if (this.westStatus(rooms)) {
-            westX -= 1;
-        }
-        if (this.eastStatus(rooms)) {
-            eastX += 1;
+    public void grow(List<Room> rooms, int n) {
+        switch (n) {
+            case 0:
+                if (this.northStatus(rooms)) {
+                    northY += 1;
+                }
+                break;
+            case 1:
+                if (this.southStatus(rooms)) {
+                    southY -= 1;
+                }
+                break;
+            case 2:
+                if (this.westStatus(rooms)) {
+                    westX -= 1;
+                }
+                break;
+            case 3:
+                if (this.eastStatus(rooms)) {
+                    eastX += 1;
+                }
+                break;
+            default:
+                break;
         }
     }
 
@@ -94,7 +120,8 @@ public class Room {
         }
         for (int i = 0; i < rooms.size(); i++) {
             Room room = rooms.get(i);
-            if (this.overlapVerticalWith(room) && this.northWall() >= room.southWall() - 1 && this.southWall() < room.northWall()) {
+            if (this.overlapVerticalWith(room) && this.northWall() >= room.southWall() - 1
+                    && this.southWall() < room.northWall()) {
                 return false;
             }
         }
@@ -110,7 +137,8 @@ public class Room {
         }
         for (int i = 0; i < rooms.size(); i++) {
             Room room = rooms.get(i);
-            if (this.overlapVerticalWith(room) && this.southWall() <= room.northWall() + 1 && this.northWall() > room.southWall()) {
+            if (this.overlapVerticalWith(room) && this.southWall() <= room.northWall() + 1
+                    && this.northWall() > room.southWall()) {
                 return false;
             }
         }
@@ -126,7 +154,8 @@ public class Room {
         }
         for (int i = 0; i < rooms.size(); i++) {
             Room room = rooms.get(i);
-            if (this.overlapHorizontalWith(room) && this.westWall() <= room.eastWall() + 1 && this.eastWall() > room.westWall()) {
+            if (this.overlapHorizontalWith(room) && this.westWall() <= room.eastWall() + 1
+                    && this.eastWall() > room.westWall()) {
                 return false;
             }
         }
@@ -142,7 +171,8 @@ public class Room {
         }
         for (int i = 0; i < rooms.size(); i++) {
             Room room = rooms.get(i);
-            if (this.overlapHorizontalWith(room) && this.eastWall() >= room.westWall() - 1 && this.westWall() < room.eastWall()) {
+            if (this.overlapHorizontalWith(room) && this.eastWall() >= room.westWall() - 1
+                    && this.westWall() < room.eastWall()) {
                 return false;
             }
         }
@@ -167,7 +197,7 @@ public class Room {
             status = true;
         }
         return status;
-    } 
+    }
 
     /*
      * Return the X coordinate of west Wall.
