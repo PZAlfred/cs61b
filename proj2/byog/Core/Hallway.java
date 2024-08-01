@@ -4,14 +4,6 @@ import java.util.List;
 import java.util.LinkedList;
 
 public class Hallway {
-    /*
-     * The class of HallWay.
-     * 1. start, end, coordinates (X, Y).
-     * 2. Two rooms connected.
-     * 3. method: hallwayWithoutThisHallway(List<Hallway> hallways)
-     * 4. method: isHorizontal(), isVertical() to check intersection.
-     * 5. 
-     */
     public int startX;
     public int startY;
     public int endX;

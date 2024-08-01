@@ -2,6 +2,8 @@ package byog.Core;
 
 import java.util.Random;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Room {
@@ -12,7 +14,11 @@ public class Room {
     private int eastX;
     private int northY;
     private int southY;
-    public List<Room> roomConnected = new LinkedList<>();
+    public boolean northConnected;
+    public boolean southConnected;
+    public boolean westConnected;
+    public boolean eastConnected;
+    public List<Hallway> hallwayConnected = new LinkedList<>();
 
     /*
      * Initiate room object at (X, Y).
@@ -24,6 +30,10 @@ public class Room {
         southY = Y;
         x = X;
         y = Y;
+        northConnected = false;
+        southConnected = false;
+        westConnected = false;
+        eastConnected = false;
     }
 
     /*
@@ -43,9 +53,6 @@ public class Room {
      * Return if this room overlap horizontally with rm2.
      */
     private boolean overlapHorizontalWith(Room rm2) {
-        if (this.equals(rm2)) {
-            return true;
-        }
         if (this.northWall() < rm2.southWall() || this.southWall() > rm2.northWall()) {
             return false;
         } else {
@@ -57,9 +64,6 @@ public class Room {
      * Return if this room overlap vertically with rm2.
      */
     private boolean overlapVerticalWith(Room rm2) {
-        if (this.equals(rm2)) {
-            return true;
-        }
         if (this.eastWall() < rm2.westWall() || this.westWall() > rm2.eastWall()) {
             return false;
         } else {
@@ -68,47 +72,187 @@ public class Room {
     }
 
     /*
-     * Generate horizontal hallway.
+     * Return if this room overlap horizontally with rm2 inside Room.
      */
-    public Hallway getHorizontalHallway(List<Room> rooms, Random rd) {
-        Room returnRoom = new Room(0, 0);
-        int returnY = this.southY;
-        for (Room room : rooms) {
-            if (this.equals(room) || this.overlapHorizontalWith(room)) {
-                continue;
-            } else if (this.northWall() >= room.southWall() || this.southWall() <= room.northWall()) {
-                continue;
-            } else {
-                int y1 = 0, y2 = 0;
-                for (int y = this.southY; y <= this.northY; y++) {
-                    if (y1 == 0 && y > room.southWall()) {
-                        if (y == room.northWall() - 1 || y == this.northWall() - 1) {
-                            y2 = y;
-                        }
-                        y1 = y;
-                    } else if (y1 != 0 && y == room.northWall() - 1) {
-                        y2 = y;
-                    }
-                }
-                returnY = rd.nextInt(y1, y2);
-                returnRoom = room;
-                if (rd.nextDouble() > 0.5) {
-                    break;
-                }
-            }
-        }
-        if (this.eastWall() < returnRoom.westWall()) {
-            return new Hallway(this.eastWall(), returnY, returnRoom.westWall(), returnY, this, returnRoom);
+    private boolean overlapRoomHorizontalWith(Room rm2) {
+        if (this.northWall() <= rm2.southWall() + 1 || this.southWall() >= rm2.northWall() - 1) {
+            return false;
         } else {
-            return new Hallway(this.westWall(), returnY, returnRoom.eastWall(), returnY, this, returnRoom);
+            return true;
         }
     }
 
     /*
-     * Generate vertical hallway.
+     * Return if this room overlap vertically with rm2 inside Room.
      */
-    public Hallway getVerticalHallway(List<Room> rooms, Random rd) {
-        return new Hallway(x, y, x, y, null, null);
+    private boolean overlapRoomVerticalWith(Room rm2) {
+        if (this.eastWall() <= rm2.westWall() + 1 || this.westWall() >= rm2.eastWall() - 1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /*
+     * Return the east side can Link or Not.
+     */
+    private boolean eastCanLink(List<Room> rooms) {
+        boolean status = false;
+        for (Room room : rooms) {
+            if (!this.equals(room) && !this.eastConnected && this.overlapRoomHorizontalWith(room) && this.eastX < room.westX) {
+                status = true;
+                break;
+            }
+        }
+        return status;
+    }
+
+    /*
+     * Return the west side can Link or Not.
+     */
+    private boolean westCanLink(List<Room> rooms) {
+        boolean status = false;
+        for (Room room : rooms) {
+            if (!this.equals(room) && !this.westConnected && this.overlapRoomHorizontalWith(room) && this.westX > room.eastX) {
+                status = true;
+                break;
+            }
+        }
+        return status;
+    }
+
+    /*
+     * Return the north side can Link or Not.
+     */
+    private boolean northCanLink(List<Room> rooms) {
+        boolean status = false;
+        for (Room room : rooms) {
+            if (!this.equals(room) && !this.northConnected && this.overlapRoomVerticalWith(room) && this.northY < room.southY) {
+                status = true;
+                break;
+            }
+        }
+        return status;
+    }
+
+    /*
+     * Return the south side can Link or Not.
+     */
+    private boolean southCanLink(List<Room> rooms) {
+        boolean status = false;
+        for (Room room : rooms) {
+            if (!this.equals(room) && !this.southConnected && this.overlapRoomVerticalWith(room) && this.southY > room.northY) {
+                status = true;
+                break;
+            }
+        }
+        return status;
+    }
+
+    /*
+     * Return the closest room on east side.
+     */
+    public Room findCloseEastRoom(List<Room> rooms) {
+        int minDis = Game.WIDTH;
+        Room returnRoom = new Room(0, 0);
+        for (Room room : rooms) {
+            if (this.equals(room) || !this.overlapRoomHorizontalWith(room) || this.westX > room.eastX) {
+                continue;
+            }
+            int dis = room.westX - this.eastX;
+            if (dis < minDis) {
+                minDis = dis;
+                returnRoom = room;
+            }
+        }
+        return returnRoom;
+    }
+
+    /*
+     * Return the closest room on west side.
+     */
+    public Room findCloseWestRoom(List<Room> rooms) {
+        int minDis = Game.WIDTH;
+        Room returnRoom = new Room(0, 0);
+        for (Room room : rooms) {
+            if (this.equals(room) || !this.overlapRoomHorizontalWith(room) || this.eastX < room.westX) {
+                continue;
+            }
+            int dis = this.westX - room.eastX;
+            if (dis < minDis) {
+                minDis = dis;
+                returnRoom = room;
+            }
+        }
+        return returnRoom;
+    }
+
+    /*
+     * Return the closest room on north side.
+     */
+    public Room findCloseNorthRoom(List<Room> rooms) {
+        int minDis = Game.HEIGHT;
+        Room returnRoom = new Room(0, 0);
+        for (Room room : rooms) {
+            if (this.equals(room) || !this.overlapRoomVerticalWith(room) || this.southY > room.northY) {
+                continue;
+            }
+            int dis = room.southY - this.northY;
+            if (dis < minDis) {
+                minDis = dis;
+                returnRoom = room;
+            }
+        }
+        return returnRoom;
+    }
+
+    /*
+     * Return the closest room on south side.
+     */
+    public Room findCloseSouthRoom(List<Room> rooms) {
+        int minDis = Game.HEIGHT;
+        Room returnRoom = new Room(0, 0);
+        for (Room room : rooms) {
+            if (this.equals(room) || !this.overlapRoomVerticalWith(room) || this.northY < room.southY) {
+                continue;
+            }
+            int dis = this.southY - room.northY;
+            if (dis < minDis) {
+                minDis = dis;
+                returnRoom = room;
+            }
+        }
+        return returnRoom;
+    }
+
+    /*
+     * return status of this room can link based on side.
+     */
+    public boolean canLink(List<Room> rooms, int n) {
+        boolean status = false;
+        switch (n) {
+            case 0:
+                if (this.northCanLink(rooms)) {
+                    status = true;
+                }
+                break;
+            case 1:
+                if (this.southCanLink(rooms)) {
+                    status = true;
+                }
+                break;
+            case 2:
+                if (this.westCanLink(rooms)) {
+                    status = true;
+                }
+                break;
+            case 3:
+                if (this.eastCanLink(rooms)) {
+                    status = true;
+                }
+                break;
+        }
+        return status;
     }
 
     /**

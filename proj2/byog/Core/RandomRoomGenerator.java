@@ -21,7 +21,7 @@ public class RandomRoomGenerator {
         TETile[][] re = new TETile[width][height];
 
         roomNum = rd.nextInt(minRoomNum, maxRoomNum);
-        // roomNum = 16; 
+        // roomNum = 8;
         roomNum = (roomNum / 4) * 4; // round to integer times of 4.
 
         List<Room> rooms = new LinkedList<>();
@@ -47,7 +47,7 @@ public class RandomRoomGenerator {
         /*
          * Let the room grow.
          */
-        int growLimit = rd.nextInt(n * 60, n * 80);
+        int growLimit = rd.nextInt(n * 40, n * 80);
         for (int i = 0; i < growLimit; i++) {
             Room room = rooms.get(rd.nextInt(0, rooms.size()));
             room.grow(room.roomsWithoutThis(rooms), rd.nextInt(0, 4));
@@ -57,21 +57,9 @@ public class RandomRoomGenerator {
          * Generate Hallway.
          */
         List<Hallway> hallways = new LinkedList<>();
-        int hallwayLimit = rd.nextInt(n * 2, n * 4);
-        for (int i = 0; i < hallwayLimit; i++) {
-            Room room = rooms.get(rd.nextInt(0, rooms.size()));
-            hallways.add(room.getHorizontalHallway(rooms, rd));
-        }
 
-        for (int i = 0; i < hallwayLimit; i++) {
-            Room room = rooms.get(rd.nextInt(0, rooms.size()));
-            hallways.add(room.getVerticalHallway(rooms, rd));
-        }
-
-        /*
-         * while !isFullyConnected(List<Room>, List<Hallway>) {
-         *   Generate Hallway}.
-         */
+        int hallwayLimit = rd.nextInt(n * 100, n * 200);
+        hallways = generateAllHallways(hallwayLimit, rd, rooms);
 
         /*
          * Add the WALL tile into the Tile Matrix.
@@ -93,10 +81,33 @@ public class RandomRoomGenerator {
          * Add the room Inside.
          */
 
+        for (Room room : rooms) {
+            for (int x = room.westWall() + 1; x < room.eastWall(); x++) {
+                for (int y = room.southWall() + 1; y < room.northWall(); y++) {
+                    re[x][y] = Tileset.FLOOR;
+                }
+            }
+        }
+
         /*
          * Add the Hallway. 1. Add WALL Tile. 2. Add INSIDE Tile. 
          * This will connect with/without hallway WALL elements.
          */
+        for (Hallway hallway : hallways) {
+            if (hallway.isHorizontal()) {
+                for (int x = hallway.startX; x <= hallway.endX; x++) {
+                    re[x][hallway.endY - 1] = Tileset.WALL;
+                    re[x][hallway.endY + 1] = Tileset.WALL;
+                    re[x][hallway.endY] = Tileset.FLOOR;
+                }
+            } else if (hallway.isVertital()) {
+                for (int y = hallway.startY; y <= hallway.endY; y++) {
+                    re[hallway.endX - 1][y] = Tileset.WALL;
+                    re[hallway.endX + 1][y] = Tileset.WALL;
+                    re[hallway.endX][y] = Tileset.FLOOR;
+                }
+            }
+        }
 
         return re;
     }
@@ -170,9 +181,125 @@ public class RandomRoomGenerator {
                 int y = rd.nextInt(yMin, yMax);
                 rooms.add(new Room(x, y));
                 // re[x][y] = Tileset.FLOWER;
-                System.out.println(x + ", " + y);
+                // System.out.println(x + ", " + y);
             }
         }
         return rooms;
+    }
+
+    /*
+     * Generate the hallway based on room1, room2, rd.
+     */
+    private Hallway generateHallway(Room room1, List<Room> rooms, int directionN, Random rd) {
+        int x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+        int xmin = 0, xmax = 0, ymin = 0, ymax = 0;
+        Room room2 = new Room(0, 0);
+        switch (directionN) {
+            case 0:
+                room2 = room1.findCloseNorthRoom(rooms);
+                room1.northConnected = true;
+                room2.southConnected = true;
+                y1 = room1.northWall();
+                y2 = room2.southWall();
+                for (int x = room1.westWall() + 1; x <= room1.eastWall() - 1; x++) {
+                    if (xmin == 0 && x > room2.westWall()) {
+                        xmin = x;
+                    }
+                    if (x == room1.eastWall() - 1 || x == room2.eastWall() - 1) {
+                        xmax = x;
+                        x1 = rd.nextInt(xmin, xmax + 1);
+                        x2 = x1;
+                        break;
+                    }
+                }
+                break;
+            case 1:
+                room2 = room1.findCloseSouthRoom(rooms);
+                room1.southConnected = true;
+                room2.northConnected = true;
+                y1 = room2.northWall();
+                y2 = room1.southWall();
+                for (int x = room1.westWall() + 1; x <= room1.eastWall() - 1; x++) {
+                    if (xmin == 0 && x > room2.westWall()) {
+                        xmin = x;
+                    }
+                    if (x == room1.eastWall() - 1 || x == room2.eastWall() - 1) {
+                        xmax = x;
+                        x1 = rd.nextInt(xmin, xmax + 1);
+                        x2 = x1;
+                        break;
+                    }
+                }
+                break;
+            case 2:
+                room2 = room1.findCloseWestRoom(rooms);
+                room1.westConnected = true;
+                room2.eastConnected = true;
+                x1 = room2.eastWall();
+                x2 = room1.westWall();
+                for (int y = room1.southWall() + 1; y <= room1.northWall() - 1; y++) {
+                    if (ymin == 0 && y > room2.southWall()) {
+                        ymin = y;
+                    }
+                    if (y == room1.northWall() - 1 || y == room2.northWall() - 1) {
+                        ymax = y;
+                        y1 = rd.nextInt(ymin, ymax + 1);
+                        y2 = y1;
+                        break;
+                    }
+                }
+                break;
+            case 3:
+                room2 = room1.findCloseEastRoom(rooms);
+                room1.eastConnected = true;
+                room2.westConnected = true;
+                x1 = room1.eastWall();
+                x2 = room2.westWall();
+                for (int y = room1.southWall() + 1; y <= room1.northWall() - 1; y++) {
+                    if (ymin == 0 && y > room2.southWall()) {
+                        ymin = y;
+                    }
+                    if (y == room1.northWall() - 1 || y == room2.northWall() - 1) {
+                        ymax = y;
+                        y1 = rd.nextInt(ymin, ymax + 1);
+                        y2 = y1;
+                        break;
+                    }
+                }
+                break;
+        }
+
+        Hallway hallway = new Hallway(x1, y1, x2, y2, room1, room2);
+        room1.hallwayConnected.add(hallway);
+        room2.hallwayConnected.add(hallway);
+        return hallway;
+    }
+
+    /*
+     * Generate ALL the hallways.
+     */
+    private List<Hallway> generateAllHallways(int hallwayLimit, Random rd, List<Room> rooms) {
+        List<Hallway> hallways = new LinkedList<>();
+        int ithHallway = 0;
+        while (ithHallway < hallwayLimit) {
+            int directionN = rd.nextInt(0, 4);
+            Room room = rooms.get(rd.nextInt(0, rooms.size()));
+            if (!room.canLink(rooms, directionN)) {
+                ithHallway++;
+                continue;
+            }
+            Hallway hallway = generateHallway(room, rooms, directionN, rd);
+            hallways.add(hallway);
+            ithHallway++;
+        }
+        return hallways;
+    }
+
+    /*
+     * check the status of rooms and hallways are fully connected or not.
+     */
+    private boolean isFullyConnected(List<Room> rooms, List<Hallway> hallways) {
+        boolean status = true;
+        return status;
     }
 }
