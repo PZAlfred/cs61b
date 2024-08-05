@@ -61,8 +61,8 @@ public class Room {
      * Return if this room overlap horizontally with rm2.
      */
     private boolean overlapHorizontalWith(Room rm2) {
-        if (this.northWall() < rm2.southWall() || this.southWall() > 
-        rm2.northWall()) {
+        if (this.northWall() < rm2.southWall() || this.southWall() 
+        > rm2.northWall()) {
             return false;
         }
         return true;
@@ -72,8 +72,8 @@ public class Room {
      * Return if this room overlap vertically with rm2.
      */
     private boolean overlapVerticalWith(Room rm2) {
-        if (this.eastWall() < rm2.westWall() || this.westWall() > 
-        rm2.eastWall()) {
+        if (this.eastWall() < rm2.westWall() || this.westWall() 
+        > rm2.eastWall()) {
             return false;
         }
         return true;
@@ -83,8 +83,8 @@ public class Room {
      * Return if this room overlap horizontally with rm2 inside Room.
      */
     private boolean overlapRoomHorizontalWith(Room rm2) {
-        if (this.northWall() <= rm2.southWall() + 1 || this.southWall() >= 
-        rm2.northWall() - 1) {
+        if (this.northWall() <= rm2.southWall() + 1 || this.southWall() 
+        >= rm2.northWall() - 1) {
             return false;
         }
         return true;
@@ -94,8 +94,8 @@ public class Room {
      * Return if this room overlap vertically with rm2 inside Room.
      */
     private boolean overlapRoomVerticalWith(Room rm2) {
-        if (this.eastWall() <= rm2.westWall() + 1 || this.westWall() >= 
-        rm2.eastWall() - 1) {
+        if (this.eastWall() <= rm2.westWall() + 1 || this.westWall() 
+        >= rm2.eastWall() - 1) {
             return false;
         }
         return true;
@@ -107,8 +107,8 @@ public class Room {
     private boolean eastCanLink(List<Room> rooms) {
         boolean status = false;
         for (Room room : rooms) {
-            if (!this.equals(room) && !this.eastConnected && 
-            this.overlapRoomHorizontalWith(room)
+            if (!this.equals(room) && !this.eastConnected 
+            && this.overlapRoomHorizontalWith(room)
                     && this.eastX < room.westX) {
                 status = true;
                 break;
@@ -123,8 +123,8 @@ public class Room {
     private boolean westCanLink(List<Room> rooms) {
         boolean status = false;
         for (Room room : rooms) {
-            if (!this.equals(room) && !this.westConnected && 
-            this.overlapRoomHorizontalWith(room)
+            if (!this.equals(room) && !this.westConnected 
+            && this.overlapRoomHorizontalWith(room)
                     && this.westX > room.eastX) {
                 status = true;
                 break;
@@ -139,8 +139,8 @@ public class Room {
     private boolean northCanLink(List<Room> rooms) {
         boolean status = false;
         for (Room room : rooms) {
-            if (!this.equals(room) && !this.northConnected && 
-            this.overlapRoomVerticalWith(room)
+            if (!this.equals(room) && !this.northConnected 
+            && this.overlapRoomVerticalWith(room)
                     && this.northY < room.southY) {
                 status = true;
                 break;
@@ -155,8 +155,8 @@ public class Room {
     private boolean southCanLink(List<Room> rooms) {
         boolean status = false;
         for (Room room : rooms) {
-            if (!this.equals(room) && !this.southConnected && 
-            this.overlapRoomVerticalWith(room)
+            if (!this.equals(room) && !this.southConnected 
+            && this.overlapRoomVerticalWith(room)
                     && this.southY > room.northY) {
                 status = true;
                 break;
@@ -172,8 +172,8 @@ public class Room {
         int minDis = Game.WIDTH;
         Room returnRoom = new Room(0, 0);
         for (Room room : rooms) {
-            if (this.equals(room) || !this.overlapRoomHorizontalWith(room) || 
-            this.westX > room.eastX) {
+            if (this.equals(room) || !this.overlapRoomHorizontalWith(room) 
+            || this.westX > room.eastX) {
                 continue;
             }
             int dis = room.westX - this.eastX;
@@ -192,8 +192,8 @@ public class Room {
         int minDis = Game.WIDTH;
         Room returnRoom = new Room(0, 0);
         for (Room room : rooms) {
-            if (this.equals(room) || !this.overlapRoomHorizontalWith(room) || 
-            this.eastX < room.westX) {
+            if (this.equals(room) || !this.overlapRoomHorizontalWith(room) 
+            || this.eastX < room.westX) {
                 continue;
             }
             int dis = this.westX - room.eastX;
@@ -212,8 +212,8 @@ public class Room {
         int minDis = Game.HEIGHT;
         Room returnRoom = new Room(0, 0);
         for (Room room : rooms) {
-            if (this.equals(room) || !this.overlapRoomVerticalWith(room) || 
-            this.southY > room.northY) {
+            if (this.equals(room) || !this.overlapRoomVerticalWith(room) 
+            ||this.southY > room.northY) {
                 continue;
             }
             int dis = room.southY - this.northY;
@@ -232,8 +232,8 @@ public class Room {
         int minDis = Game.HEIGHT;
         Room returnRoom = new Room(0, 0);
         for (Room room : rooms) {
-            if (this.equals(room) || !this.overlapRoomVerticalWith(room) || 
-            this.northY < room.southY) {
+            if (this.equals(room) || !this.overlapRoomVerticalWith(room) 
+            || this.northY < room.southY) {
                 continue;
             }
             int dis = this.southY - room.northY;

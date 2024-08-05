@@ -111,7 +111,8 @@ public class RandomRoomGenerator {
         boolean status = false;
         for (Room room : rooms) {
             for (Room room2 : room.roomsWithoutThis(rooms)) {
-                if ((room.x() - room2.x()) * (room.x() - room2.x()) + (room.y() - room2.y()) * (room.y() - room2.y()) <= 8) {
+                if ((room.x() - room2.x()) * (room.x() - room2.x()) + (room.y()
+                - room2.y()) * (room.y() - room2.y()) <= 8) {
                     status = true;
                 }
             }
@@ -170,7 +171,8 @@ public class RandomRoomGenerator {
     /*
      * Generate the hallway based on room1, room2, rd.
      */
-    private Hallway generateHallway(Room room1, List<Room> rooms, int directionN, Random rd) {
+    private Hallway generateHallway(Room room1, List<Room> rooms, 
+    int directionN, Random rd) {
         int x1 = 0, x2 = 0, y1 = 0, y2 = 0;
         int xmin = 0, xmax = 0, ymin = 0, ymax = 0;
         Room room2 = new Room(0, 0);
