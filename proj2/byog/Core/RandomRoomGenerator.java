@@ -6,7 +6,6 @@ import java.util.Random;
 
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
-import byog.Core.RandomUtils;
 
 public class RandomRoomGenerator {
     private int minRoomNum;
@@ -14,8 +13,6 @@ public class RandomRoomGenerator {
     private int roomNum;
 
     public TETile[][] generateRandomRooms(int width, int height, long seed) {
-        // minRoomNum = width * height / 240;
-        // maxRoomNum = width * height / 120;
         minRoomNum = 4;
         maxRoomNum = 25;
         Random rd = new Random(seed);
@@ -40,10 +37,6 @@ public class RandomRoomGenerator {
         while (needRegenerate(rooms)) {
             rooms = generateRooms(rd, width, height, n);
         }
-
-        // for (Room room : rooms) {
-        //     re[room.x][room.y] = Tileset.FLOWER;
-        // }
 
         /*
          * Let the room grow.
