@@ -2,12 +2,13 @@ import byog.Core.Game;
 import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 
-public class testGame {
+public class TestGame {
     public static void main(String[] args) {
         TERenderer ter = new TERenderer();
         ter.initialize(Game.WIDTH, Game.HEIGHT);
         Game game = new Game();
-        TETile[][] tiles = game.playWithInputString("n1S"); // 9223372036854775807
+        // TETile[][] tiles = game.playWithInputString("L123S:Q");
+        TETile[][] tiles = game.playWithInputString("L:Q");
         ter.renderFrame(tiles);
     }
 }
