@@ -1,11 +1,19 @@
 package byog.Core;
 
-import byog.TileEngine.TERenderer;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+// import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 
 public class Game {
     /* Feel free to change the width and height. */
-    public static final int WIDTH = 80;
+    public static final int WIDTH = 50;
     public static final int HEIGHT = 30;
 
     /**
@@ -28,9 +36,6 @@ public class Game {
      * @return the 2D TETile[][] representing the state of the world
      */
     public TETile[][] playWithInputString(String input) {
-        // TODO: Fill out this method to run the game using the input passed in,
-        // and return a 2D tile representation of the world that would have been
-        // drawn if the same inputs had been given to playWithKeyboard().
 
         TETile[][] finalWorldFrame = null;
 
@@ -38,54 +43,115 @@ public class Game {
          * Check input is Valid/Invalid.
          */
         boolean saveStatus = false;
-        boolean pureNum = false;
+        boolean startGame = false;
+        boolean loadStatus = false;
         String numStr = "";
         input = input.toLowerCase();
-        if (input.substring(input.length() - 2, input.length()).equals(":q")) {
-            input = input.substring(0, input.length() - 2);
-            saveStatus = true;
+        if (input.charAt(0) == 'l') {
+            loadStatus = true;
+            finalWorldFrame = loadGame();
         }
-        if (input.charAt(0) == 'n' && input.charAt(input.length() - 1) == 's') {
-            numStr = input.substring(1, input.length() - 1);
-            if (numStr.matches("[0-9]*")) {
-                pureNum = true;
-            }
-        }
-
-        /*
-         * check if nunStr is valid.
-         */
-        String maxValue = "9223372036854775807";
-        if (numStr.length() > 19) {
+        if (!loadStatus && !(input.charAt(0) == 'n')) {
             System.exit(0);
-        } else if (numStr.length() == 19) {
-            for (int i = 0; i < numStr.length(); i++) {
-                if ((int) numStr.charAt(i) > (int) maxValue.charAt(i)) {
-                    System.exit(0);
+        }
+        input = input.substring(1, input.length());
+        for (int i = 0; i < input.length() - 1; i++) {
+            char ci = input.charAt(i);
+            if (Character.isDigit(ci)) {
+                numStr += ci;
+                if (input.charAt(i + 1) == 's') {
+                    startGame = true;
+                }
+            } else if (startGame) {
+                if (input.substring(i, i + 2).equals(":q")) {
+                    saveStatus = true;
+                    break;
                 }
             }
         }
+        if (!loadStatus) {
+            if (!startGame) {
+                System.exit(0);
+            }
+            /*
+             * check if nunStr is valid.
+             */
+            String maxValue = "9223372036854775807";
+            if (numStr.length() > 19) {
+                System.exit(0);
+            } else if (numStr.length() == 19) {
+                for (int i = 0; i < numStr.length(); i++) {
+                    if ((int) numStr.charAt(i) > (int) maxValue.charAt(i)) {
+                        System.exit(0);
+                    }
+                }
+            }
 
-        /*
-         * A valid input and process the matrix.
-         */
-        long SEED = 0;
-        if (pureNum) {
-            SEED =Long.parseLong(numStr);
-        } else {
-            System.exit(0);
+            /*
+             * A valid input and process the matrix.
+             */
+            long seed = Long.parseLong(numStr);
+
+            /*
+             * Generate the rooms using SEED.
+             */
+            RandomRoomGenerator rrg = new RandomRoomGenerator();
+            finalWorldFrame = rrg.generateRandomRooms(WIDTH, HEIGHT, seed);
+
         }
-
-        /*
-         * Generate the rooms using SEED.
-         */
-        RandomRoomGenerator rrg = new RandomRoomGenerator();
-        finalWorldFrame = rrg.generateRandomRooms(WIDTH, HEIGHT, SEED);
-
         if (saveStatus) {
             // save game
+            saveGame(finalWorldFrame);
         }
         return finalWorldFrame;
 
+    }
+
+    /*
+    * save game.
+    */
+    private static void saveGame(TETile[][] finalWorldFrame) {
+        File f = new File("./game.txt");
+        try {
+            if (!f.exists()) {
+                f.createNewFile();
+            }
+            FileOutputStream fs = new FileOutputStream(f);
+            ObjectOutputStream os = new ObjectOutputStream(fs);
+            os.writeObject(finalWorldFrame);
+            os.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("file not found");
+            System.exit(0);
+        } catch (IOException e) {
+            System.out.println(e);
+            System.exit(0);
+        }
+    }
+
+    /*
+     * load game.
+     */
+    private static TETile[][] loadGame() {
+        File f = new File("./game.txt");
+        if (f.exists()) {
+            try {
+                FileInputStream fs = new FileInputStream(f);
+                ObjectInputStream os = new ObjectInputStream(fs);
+                TETile[][] loadGame = (TETile[][]) os.readObject();
+                os.close();
+                return loadGame;
+            } catch (FileNotFoundException e) {
+                System.out.println("file not found");
+                System.exit(0);
+            } catch (IOException e) {
+                System.out.println(e);
+                System.exit(0);
+            } catch (ClassNotFoundException e) {
+                System.out.println("class not found");
+                System.exit(0);
+            }
+        }
+        return new TETile[WIDTH][HEIGHT];
     }
 }

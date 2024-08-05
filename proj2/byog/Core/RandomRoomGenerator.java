@@ -6,6 +6,7 @@ import java.util.Random;
 
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
+import byog.Core.RandomUtils;
 
 public class RandomRoomGenerator {
     private int minRoomNum;
@@ -15,12 +16,12 @@ public class RandomRoomGenerator {
     public TETile[][] generateRandomRooms(int width, int height, long seed) {
         // minRoomNum = width * height / 240;
         // maxRoomNum = width * height / 120;
-        minRoomNum = 8;
-        maxRoomNum = 20;
+        minRoomNum = 4;
+        maxRoomNum = 25;
         Random rd = new Random(seed);
         TETile[][] re = new TETile[width][height];
 
-        roomNum = rd.nextInt(minRoomNum, maxRoomNum);
+        roomNum = RandomUtils.uniform(rd, minRoomNum, maxRoomNum);
         // roomNum = 8;
         roomNum = (roomNum / 4) * 4; // round to integer times of 4.
 
@@ -40,17 +41,17 @@ public class RandomRoomGenerator {
             rooms = generateRooms(rd, width, height, n);
         }
 
-        for (Room room : rooms) {
-            re[room.x][room.y] = Tileset.FLOWER;
-        }
+        // for (Room room : rooms) {
+        //     re[room.x][room.y] = Tileset.FLOWER;
+        // }
 
         /*
          * Let the room grow.
          */
-        int growLimit = rd.nextInt(n * 40, n * 80);
+        int growLimit = RandomUtils.uniform(rd, n * 40, n * 80);
         for (int i = 0; i < growLimit; i++) {
-            Room room = rooms.get(rd.nextInt(0, rooms.size()));
-            room.grow(room.roomsWithoutThis(rooms), rd.nextInt(0, 4));
+            Room room = rooms.get(RandomUtils.uniform(rd, 0, rooms.size()));
+            room.grow(room.roomsWithoutThis(rooms), RandomUtils.uniform(rd, 0, 4));
         }
 
         /*
@@ -58,7 +59,7 @@ public class RandomRoomGenerator {
          */
         List<Hallway> hallways = new LinkedList<>();
 
-        int hallwayLimit = rd.nextInt(n * 100, n * 200);
+        int hallwayLimit = RandomUtils.uniform(rd, n * 100, n * 200);
         hallways = generateAllHallways(hallwayLimit, rd, rooms);
 
         /*
@@ -90,24 +91,9 @@ public class RandomRoomGenerator {
         }
 
         /*
-         * Add the Hallway. 1. Add WALL Tile. 2. Add INSIDE Tile. 
-         * This will connect with/without hallway WALL elements.
+         * Add the Hallway.
          */
-        for (Hallway hallway : hallways) {
-            if (hallway.isHorizontal()) {
-                for (int x = hallway.startX; x <= hallway.endX; x++) {
-                    re[x][hallway.endY - 1] = Tileset.WALL;
-                    re[x][hallway.endY + 1] = Tileset.WALL;
-                    re[x][hallway.endY] = Tileset.FLOOR;
-                }
-            } else if (hallway.isVertital()) {
-                for (int y = hallway.startY; y <= hallway.endY; y++) {
-                    re[hallway.endX - 1][y] = Tileset.WALL;
-                    re[hallway.endX + 1][y] = Tileset.WALL;
-                    re[hallway.endX][y] = Tileset.FLOOR;
-                }
-            }
-        }
+        re = addHallways(hallways, re);
 
         return re;
     }
@@ -132,7 +118,7 @@ public class RandomRoomGenerator {
         boolean status = false;
         for (Room room : rooms) {
             for (Room room2 : room.roomsWithoutThis(rooms)) {
-                if ((room.x - room2.x) * (room.x - room2.x) + (room.y - room2.y) * (room.y - room2.y) <= 8) {
+                if ((room.x() - room2.x()) * (room.x() - room2.x()) + (room.y() - room2.y()) * (room.y() - room2.y()) <= 8) {
                     status = true;
                 }
             }
@@ -175,10 +161,11 @@ public class RandomRoomGenerator {
                     yMin = 1;
                     yMax = height / 2 - 1;
                     break;
+                default:
             }
             for (int i = 0; i < n; i++) {
-                int x = rd.nextInt(xMin, xMax);
-                int y = rd.nextInt(yMin, yMax);
+                int x = RandomUtils.uniform(rd, xMin, xMax);
+                int y = RandomUtils.uniform(rd, yMin, yMax);
                 rooms.add(new Room(x, y));
                 // re[x][y] = Tileset.FLOWER;
                 // System.out.println(x + ", " + y);
@@ -207,7 +194,7 @@ public class RandomRoomGenerator {
                     }
                     if (x == room1.eastWall() - 1 || x == room2.eastWall() - 1) {
                         xmax = x;
-                        x1 = rd.nextInt(xmin, xmax + 1);
+                        x1 = RandomUtils.uniform(rd, xmin, xmax + 1);
                         x2 = x1;
                         break;
                     }
@@ -225,7 +212,7 @@ public class RandomRoomGenerator {
                     }
                     if (x == room1.eastWall() - 1 || x == room2.eastWall() - 1) {
                         xmax = x;
-                        x1 = rd.nextInt(xmin, xmax + 1);
+                        x1 = RandomUtils.uniform(rd, xmin, xmax + 1);
                         x2 = x1;
                         break;
                     }
@@ -243,7 +230,7 @@ public class RandomRoomGenerator {
                     }
                     if (y == room1.northWall() - 1 || y == room2.northWall() - 1) {
                         ymax = y;
-                        y1 = rd.nextInt(ymin, ymax + 1);
+                        y1 = RandomUtils.uniform(rd, ymin, ymax + 1);
                         y2 = y1;
                         break;
                     }
@@ -261,17 +248,18 @@ public class RandomRoomGenerator {
                     }
                     if (y == room1.northWall() - 1 || y == room2.northWall() - 1) {
                         ymax = y;
-                        y1 = rd.nextInt(ymin, ymax + 1);
+                        y1 = RandomUtils.uniform(rd, ymin, ymax + 1);
                         y2 = y1;
                         break;
                     }
                 }
                 break;
+            default:
         }
 
         Hallway hallway = new Hallway(x1, y1, x2, y2, room1, room2);
-        room1.hallwayConnected.add(hallway);
-        room2.hallwayConnected.add(hallway);
+        // room1.hallwayConnected.add(hallway);
+        // room2.hallwayConnected.add(hallway);
         return hallway;
     }
 
@@ -282,8 +270,8 @@ public class RandomRoomGenerator {
         List<Hallway> hallways = new LinkedList<>();
         int ithHallway = 0;
         while (ithHallway < hallwayLimit) {
-            int directionN = rd.nextInt(0, 4);
-            Room room = rooms.get(rd.nextInt(0, rooms.size()));
+            int directionN = RandomUtils.uniform(rd, 0, 4);
+            Room room = rooms.get(RandomUtils.uniform(rd, 0, rooms.size()));
             if (!room.canLink(rooms, directionN)) {
                 ithHallway++;
                 continue;
@@ -295,11 +283,27 @@ public class RandomRoomGenerator {
         return hallways;
     }
 
+
     /*
-     * check the status of rooms and hallways are fully connected or not.
+     * add the hallways into Tilematrix.
      */
-    private boolean isFullyConnected(List<Room> rooms, List<Hallway> hallways) {
-        boolean status = true;
-        return status;
+    private TETile[][] addHallways(List<Hallway> hallways, TETile[][] re) {
+
+        for (Hallway hallway : hallways) {
+            if (hallway.isHorizontal()) {
+                for (int x = hallway.startX(); x <= hallway.endX(); x++) {
+                    re[x][hallway.endY() - 1] = Tileset.WALL;
+                    re[x][hallway.endY() + 1] = Tileset.WALL;
+                    re[x][hallway.endY()] = Tileset.FLOOR;
+                }
+            } else if (hallway.isVertital()) {
+                for (int y = hallway.startY(); y <= hallway.endY(); y++) {
+                    re[hallway.endX() - 1][y] = Tileset.WALL;
+                    re[hallway.endX() + 1][y] = Tileset.WALL;
+                    re[hallway.endX()][y] = Tileset.FLOOR;
+                }
+            }
+        }
+        return re;
     }
 }

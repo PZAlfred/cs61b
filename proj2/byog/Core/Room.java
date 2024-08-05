@@ -1,15 +1,15 @@
 package byog.Core;
 
-import java.util.Random;
+// import java.util.Random;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+// import java.util.Map;
+// import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Room {
 
-    public int x;
-    public int y;
+    private int x;
+    private int y;
     private int westX;
     private int eastX;
     private int northY;
@@ -18,7 +18,7 @@ public class Room {
     public boolean southConnected;
     public boolean westConnected;
     public boolean eastConnected;
-    public List<Hallway> hallwayConnected = new LinkedList<>();
+    // public List<Hallway> hallwayConnected = new LinkedList<>();
 
     /*
      * Initiate room object at (X, Y).
@@ -34,6 +34,14 @@ public class Room {
         southConnected = false;
         westConnected = false;
         eastConnected = false;
+    }
+
+    public int x() {
+        return x;
+    }
+
+    public int y() {
+        return y;
     }
 
     /*
@@ -55,9 +63,8 @@ public class Room {
     private boolean overlapHorizontalWith(Room rm2) {
         if (this.northWall() < rm2.southWall() || this.southWall() > rm2.northWall()) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /*
@@ -66,9 +73,8 @@ public class Room {
     private boolean overlapVerticalWith(Room rm2) {
         if (this.eastWall() < rm2.westWall() || this.westWall() > rm2.eastWall()) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /*
@@ -77,9 +83,8 @@ public class Room {
     private boolean overlapRoomHorizontalWith(Room rm2) {
         if (this.northWall() <= rm2.southWall() + 1 || this.southWall() >= rm2.northWall() - 1) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /*
@@ -88,9 +93,8 @@ public class Room {
     private boolean overlapRoomVerticalWith(Room rm2) {
         if (this.eastWall() <= rm2.westWall() + 1 || this.westWall() >= rm2.eastWall() - 1) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /*
@@ -99,7 +103,8 @@ public class Room {
     private boolean eastCanLink(List<Room> rooms) {
         boolean status = false;
         for (Room room : rooms) {
-            if (!this.equals(room) && !this.eastConnected && this.overlapRoomHorizontalWith(room) && this.eastX < room.westX) {
+            if (!this.equals(room) && !this.eastConnected && this.overlapRoomHorizontalWith(room)
+                    && this.eastX < room.westX) {
                 status = true;
                 break;
             }
@@ -113,7 +118,8 @@ public class Room {
     private boolean westCanLink(List<Room> rooms) {
         boolean status = false;
         for (Room room : rooms) {
-            if (!this.equals(room) && !this.westConnected && this.overlapRoomHorizontalWith(room) && this.westX > room.eastX) {
+            if (!this.equals(room) && !this.westConnected && this.overlapRoomHorizontalWith(room)
+                    && this.westX > room.eastX) {
                 status = true;
                 break;
             }
@@ -127,7 +133,8 @@ public class Room {
     private boolean northCanLink(List<Room> rooms) {
         boolean status = false;
         for (Room room : rooms) {
-            if (!this.equals(room) && !this.northConnected && this.overlapRoomVerticalWith(room) && this.northY < room.southY) {
+            if (!this.equals(room) && !this.northConnected && this.overlapRoomVerticalWith(room)
+                    && this.northY < room.southY) {
                 status = true;
                 break;
             }
@@ -141,7 +148,8 @@ public class Room {
     private boolean southCanLink(List<Room> rooms) {
         boolean status = false;
         for (Room room : rooms) {
-            if (!this.equals(room) && !this.southConnected && this.overlapRoomVerticalWith(room) && this.southY > room.northY) {
+            if (!this.equals(room) && !this.southConnected && this.overlapRoomVerticalWith(room)
+                    && this.southY > room.northY) {
                 status = true;
                 break;
             }
@@ -251,6 +259,7 @@ public class Room {
                     status = true;
                 }
                 break;
+            default:
         }
         return status;
     }

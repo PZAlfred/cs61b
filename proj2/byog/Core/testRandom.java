@@ -1,7 +1,8 @@
 package byog.Core;
+
 import java.util.Random;
 
-public class testRandom {
+public class TestRandom {
     public static void main(String[] args) {
         for (int i = 0; i < 3; i++) {
             Random rd = new Random(125);
