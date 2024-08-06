@@ -289,12 +289,21 @@ public class RandomRoomGenerator {
                 for (int x = hallway.startX(); x <= hallway.endX(); x++) {
                     re[x][hallway.endY() - 1] = Tileset.WALL;
                     re[x][hallway.endY() + 1] = Tileset.WALL;
-                    re[x][hallway.endY()] = Tileset.FLOOR;
                 }
             } else if (hallway.isVertital()) {
                 for (int y = hallway.startY(); y <= hallway.endY(); y++) {
                     re[hallway.endX() - 1][y] = Tileset.WALL;
                     re[hallway.endX() + 1][y] = Tileset.WALL;
+                }
+            }
+        }
+        for (Hallway hallway : hallways) {
+            if (hallway.isHorizontal()) {
+                for (int x = hallway.startX(); x <= hallway.endX(); x++) {
+                    re[x][hallway.endY()] = Tileset.FLOOR;
+                }
+            } else if (hallway.isVertital()) {
+                for (int y = hallway.startY(); y <= hallway.endY(); y++) {
                     re[hallway.endX()][y] = Tileset.FLOOR;
                 }
             }

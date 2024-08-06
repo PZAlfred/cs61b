@@ -7,7 +7,7 @@ public class TestGame {
         TERenderer ter = new TERenderer();
         ter.initialize(Game.WIDTH, Game.HEIGHT);
         Game game = new Game();
-        TETile[][] tiles = game.playWithInputString("N123STTDDD");
+        TETile[][] tiles = game.playWithInputString("N123S");
         // TETile[][] tiles = game.playWithInputString("L:Q");
         ter.renderFrame(tiles);
     }
